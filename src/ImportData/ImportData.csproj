@@ -73,10 +73,6 @@
     <Reference Include="Aspose.Words">
       <HintPath>..\..\Libs\Aspose.Words.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\BouncyCastle.dll</HintPath>
-    </Reference>
     <Reference Include="Breadcrumb, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\Breadcrumb.dll</HintPath>
@@ -104,10 +100,6 @@
     <Reference Include="CommonLibrary, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\CommonLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="CommonLibrary.Caching, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libs\CommonLibrary.Caching.dll</HintPath>
     </Reference>
     <Reference Include="CommonLibrary.Controls, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -168,9 +160,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Open XML SDK\V2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="FormalizeDocumentsParser">
-      <HintPath>..\..\Libs\FormalizeDocumentsParser.dll</HintPath>
-    </Reference>
     <Reference Include="GongSolutions.Wpf.DragDrop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=920bbb82639c64ef, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\GongSolutions.Wpf.DragDrop.dll</HintPath>
@@ -198,9 +187,6 @@
     <Reference Include="InterLinq, Version=0.2.4367.30654, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\InterLinq.dll</HintPath>
-    </Reference>
-    <Reference Include="LumenWorks.Framework.IO">
-      <HintPath>..\..\Libs\LumenWorks.Framework.IO.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -233,9 +219,6 @@
     <Reference Include="NTwain, Version=3.0.0.0, Culture=neutral, PublicKeyToken=f9f7e0c5169536c8, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\NTwain.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\Libs\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp-WPF, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -365,9 +348,6 @@
     </Reference>
     <Reference Include="Sungero.Sync1C">
       <HintPath>..\..\Libs\Sungero.Sync1C.dll</HintPath>
-    </Reference>
-    <Reference Include="Sungero.SynerdocsExtensions">
-      <HintPath>..\..\Libs\Sungero.SynerdocsExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Sungero.Workflow.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
