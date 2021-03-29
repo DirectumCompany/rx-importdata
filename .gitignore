@@ -113,3 +113,5 @@ ENV/
 /src/ImportData/bin/Debug/Unity.Configuration.pdb
 /src/ImportData/bin/Debug/Unity.Container.pdb
 /src/ImportData/ImportData_TemporaryKey.pfx
+/src/.vs/ImportData/v14/.suo
+/src/ImportData/ImportData.csproj
