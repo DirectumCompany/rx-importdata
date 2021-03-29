@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\EDocs\Addendum.cs" />
     <Compile Include="Entities\EDocs\Order.cs" />
     <Compile Include="Logic\BusinessLogic.cs" />
     <Compile Include="Entities\Databooks\BusinessUnit.cs" />
