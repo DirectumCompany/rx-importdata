@@ -133,6 +133,7 @@ namespace ImportData
         { "a|action=",  "Действие.", v => action = v },
         { "f|file=",  "Файл с исходными данными.", v => xlsxPath = v },
         { "dr|doc_register_id=",  "Журнал регистрации.", v => extraParameters.Add("doc_register_id", v)},
+        { "d|search_doubles=", "Признак поиска дублей сущностей.", d => ignoreDuplicates = d},
         { "h|help", "Show this help", v => isHelp = (v != null) },
       };
 
