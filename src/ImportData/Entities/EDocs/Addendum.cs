@@ -81,7 +81,6 @@ namespace ImportData
 
           note = this.Parameters[shift + 6];
 
-
           var documents = Enumerable.ToList(session.GetAll<Sungero.Docflow.IOfficialDocument>().Where(x => x.RegistrationNumber == regNumberLeadingDocument &&
                                                                                                       x.RegistrationDate == regDateLeadingDocument));
           if (documents.Count() > 1)

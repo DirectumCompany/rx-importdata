@@ -34,6 +34,7 @@ namespace ImportData
       public const string IncomingLetters = "ВходящиеПисьма";
       public const string OutgoingLetters = "ИсходящиеПисьма";
       public const string Orders = "Приказы и Распоряжения";
+      public const string Addendums = "Приложения";
     }
 
     public class Actions
