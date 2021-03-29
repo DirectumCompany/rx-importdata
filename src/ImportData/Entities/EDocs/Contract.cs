@@ -174,16 +174,20 @@ namespace ImportData
         var note = this.Parameters[shift + 16];
         try
         {
-          var contracts = Enumerable.ToList(session.GetAll<Sungero.Contracts.IContract>().Where(x => Equals(x.RegistrationNumber, regNumber) &&
+          var contract = Sungero.Contracts.Contracts.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
+          {
+            var contracts = Enumerable.ToList(session.GetAll<Sungero.Contracts.IContract>().Where(x => Equals(x.RegistrationNumber, regNumber) &&
                                                                                                 Equals(x.RegistrationDate, regDate) &&
                                                                                                 Equals(x.Counterparty, counterparty)));
-          var contract = (Enumerable.FirstOrDefault<Sungero.Contracts.IContract>(contracts));
-          if (contract != null)
-          {
-            var message = string.Format("Договор не может быть импортирован. Найден дубль с такими же реквизитами \"Рег. №\" {0}, \"Дата документа\" {1}, \"Контрагент\" {2}.", regNumber, regDate.ToString(), counterparty.ToString());
-            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-            logger.Error(message);
-            return exceptionList;
+            contract = (Enumerable.FirstOrDefault<Sungero.Contracts.IContract>(contracts));
+            if (contract != null)
+            {
+              var message = string.Format("Договор не может быть импортирован. Найден дубль с такими же реквизитами \"Рег. №\" {0}, \"Дата документа\" {1}, \"Контрагент\" {2}.", regNumber, regDate.ToString(), counterparty.ToString());
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
           contract = session.Create<Sungero.Contracts.IContract>();
           contract.Counterparty = counterparty;

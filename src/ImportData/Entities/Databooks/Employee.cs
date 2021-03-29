@@ -79,14 +79,18 @@ namespace ImportData
 
         try
         {
-          var employees = Enumerable.ToList(session.GetAll<Sungero.Company.IEmployee>().Where(x => x.Name == name));
-          var employee = (Enumerable.FirstOrDefault<Sungero.Company.IEmployee>(employees));
-          if (employee != null)
+          var employee = Sungero.Company.Employees.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            var message = string.Format("Сотрудник не может быть импортирован. Найден дубль \"{0}\".", name);
-            exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
-            logger.Error(message);
-            return exceptionList;
+            var employees = Enumerable.ToList(session.GetAll<Sungero.Company.IEmployee>().Where(x => x.Name == name));
+            employee = (Enumerable.FirstOrDefault<Sungero.Company.IEmployee>(employees));
+            if (employee != null)
+            {
+              var message = string.Format("Сотрудник не может быть импортирован. Найден дубль \"{0}\".", name);
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
           employee = session.Create<Sungero.Company.IEmployee>();
           employee.Name = name;

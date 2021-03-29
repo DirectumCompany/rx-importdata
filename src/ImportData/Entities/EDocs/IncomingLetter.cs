@@ -116,14 +116,18 @@ namespace ImportData
         var note = this.Parameters[shift + 11];
         try
         {
-          var incomingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IIncomingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
-          var incomingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IIncomingLetter>(incomingLetters));
-          if (incomingLetter != null)
+          var incomingLetter = Sungero.RecordManagement.IncomingLetters.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            var message = string.Format("Входящее письмо не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
-            exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
-            logger.Error(message);
-            return exceptionList;
+            var incomingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IIncomingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
+            incomingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IIncomingLetter>(incomingLetters));
+            if (incomingLetter != null)
+            {
+              var message = string.Format("Входящее письмо не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
 
           incomingLetter = session.Create<Sungero.RecordManagement.IIncomingLetter>();

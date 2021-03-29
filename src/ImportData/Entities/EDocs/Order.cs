@@ -118,14 +118,18 @@ namespace ImportData
         var note = this.Parameters[shift + 11];
         try
         {
-          var orders = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IOrder>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
-          var order = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IOrder>(orders));
-          if (order != null)
+          var order = Sungero.RecordManagement.Orders.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            var message = string.Format("Приказ/распоряжение не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString(), regNumber);
-            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-            logger.Error(message);
-            return exceptionList;
+            var orders = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IOrder>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
+            order = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IOrder>(orders));
+            if (order != null)
+            {
+              var message = string.Format("Приказ/распоряжение не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString(), regNumber);
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
 
           order = session.Create<Sungero.RecordManagement.IOrder>();

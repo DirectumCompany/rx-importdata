@@ -92,23 +92,25 @@ namespace ImportData
 
         try
         {
-          var businessUnits = Enumerable.ToList(session.GetAll<Sungero.Company.IBusinessUnit>().Where(x => x.Name == name ||
-            !string.IsNullOrEmpty(tin) && x.TIN == tin ||
-            !string.IsNullOrEmpty(psrn) && x.PSRN == psrn));
-          var businessUnit = (Enumerable.FirstOrDefault<Sungero.Company.IBusinessUnit>(businessUnits));
-          if (businessUnit != null)
+          var businessUnit = Sungero.Company.BusinessUnits.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            if (!supplementEntity)
+            var businessUnits = Enumerable.ToList(session.GetAll<Sungero.Company.IBusinessUnit>().Where(x => x.Name == name ||
+                        !string.IsNullOrEmpty(tin) && x.TIN == tin ||
+                        !string.IsNullOrEmpty(psrn) && x.PSRN == psrn));
+            businessUnit = (Enumerable.FirstOrDefault<Sungero.Company.IBusinessUnit>(businessUnits));
+            if (businessUnit != null)
             {
-              var message = string.Format("НОР не может быть импортирована. Найден дубль по реквизитам Наименование: \"{0}\", ИНН: {1}, ОГРН: {2}.", name, tin, psrn);
-              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-              logger.Error(message);
-              return exceptionList;
+              if (!supplementEntity)
+              {
+                var message = string.Format("НОР не может быть импортирована. Найден дубль по реквизитам Наименование: \"{0}\", ИНН: {1}, ОГРН: {2}.", name, tin, psrn);
+                exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+                logger.Error(message);
+                return exceptionList;
+              }
             }
           }
-          else
-            businessUnit = session.Create<Sungero.Company.IBusinessUnit>();
-
+          businessUnit = session.Create<Sungero.Company.IBusinessUnit>();
           businessUnit.Name = name;
           businessUnit.LegalName = legalName;
           businessUnit.HeadCompany = headCompany;
