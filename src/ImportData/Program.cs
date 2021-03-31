@@ -67,41 +67,44 @@ namespace ImportData
     /// <param name="extraParameters">Дополнительные параметры.</param>
     /// <param name="logger">Логировщик.</param>
     /// <returns>Соответствующий тип сущности.</returns>
-    static void ProcessByAction(string action, string xlsxPath, Dictionary<string, string> extraParameters, NLog.Logger logger)
+    static void ProcessByAction(string action, string xlsxPath, Dictionary<string, string> extraParameters, string ignoreDuplicates, NLog.Logger logger)
     {
       switch (action)
       {
         case "importcompany":
           logger.Info("Импорт сотрудников");
           logger.Info("-------------");
-          EntityProcessor.Procces(typeof(Employee), xlsxPath, Constants.SheetNames.Employees, extraParameters, logger);
+          EntityProcessor.Procces(typeof(Employee), xlsxPath, Constants.SheetNames.Employees, extraParameters, ignoreDuplicates, logger);
           logger.Info("Импорт НОР");
           logger.Info("-------------");
-          EntityProcessor.Procces(typeof(BusinessUnit), xlsxPath, Constants.SheetNames.BusinessUnits, extraParameters, logger);
+          EntityProcessor.Procces(typeof(BusinessUnit), xlsxPath, Constants.SheetNames.BusinessUnits, extraParameters, ignoreDuplicates, logger);
           logger.Info("Импорт подразделений");
           logger.Info("-------------");
-          EntityProcessor.Procces(typeof(Department), xlsxPath, Constants.SheetNames.Departments, extraParameters, logger);
+          EntityProcessor.Procces(typeof(Department), xlsxPath, Constants.SheetNames.Departments, extraParameters, ignoreDuplicates, logger);
           break;
         case "importcompanies":
-          EntityProcessor.Procces(typeof(Company), xlsxPath, Constants.SheetNames.Companies, extraParameters, logger);
+          EntityProcessor.Procces(typeof(Company), xlsxPath, Constants.SheetNames.Companies, extraParameters, ignoreDuplicates, logger);
           break;
         case "importpersons":
-          EntityProcessor.Procces(typeof(Person), xlsxPath, Constants.SheetNames.Persons, extraParameters, logger);
+          EntityProcessor.Procces(typeof(Person), xlsxPath, Constants.SheetNames.Persons, extraParameters, ignoreDuplicates, logger);
           break;
         case "importcontracts":
-          EntityProcessor.Procces(typeof(Contract), xlsxPath, Constants.SheetNames.Contracts, extraParameters, logger);
+          EntityProcessor.Procces(typeof(Contract), xlsxPath, Constants.SheetNames.Contracts, extraParameters, ignoreDuplicates, logger);
           break;
         case "importsupagreements":
-          EntityProcessor.Procces(typeof(SupAgreement), xlsxPath, Constants.SheetNames.SupAgreements, extraParameters, logger);
+          EntityProcessor.Procces(typeof(SupAgreement), xlsxPath, Constants.SheetNames.SupAgreements, extraParameters, ignoreDuplicates, logger);
           break;
         case "importincomingletters":
-          EntityProcessor.Procces(typeof(IncomingLetter), xlsxPath, Constants.SheetNames.IncomingLetters, extraParameters, logger);
+          EntityProcessor.Procces(typeof(IncomingLetter), xlsxPath, Constants.SheetNames.IncomingLetters, extraParameters, ignoreDuplicates, logger);
           break;
         case "importoutgoingletters":
-          EntityProcessor.Procces(typeof(OutgoingLetter), xlsxPath, Constants.SheetNames.OutgoingLetters, extraParameters, logger);
+          EntityProcessor.Procces(typeof(OutgoingLetter), xlsxPath, Constants.SheetNames.OutgoingLetters, extraParameters, ignoreDuplicates, logger);
           break;
         case "importorders":
-          EntityProcessor.Procces(typeof(Order), xlsxPath, Constants.SheetNames.Orders, extraParameters, logger);
+          EntityProcessor.Procces(typeof(Order), xlsxPath, Constants.SheetNames.Orders, extraParameters, ignoreDuplicates, logger);
+          break;
+        case "importaddendums":
+          EntityProcessor.Procces(typeof(Addendum), xlsxPath, Constants.SheetNames.Addendums, extraParameters, ignoreDuplicates, logger);
           break;
         default:
           break;
@@ -120,6 +123,7 @@ namespace ImportData
       var xlsxPath = string.Empty;
       var action = string.Empty;
       var extraParameters = new Dictionary<string, string>();
+      var ignoreDuplicates = string.Empty;
 
       bool isHelp = false;
 
@@ -129,6 +133,7 @@ namespace ImportData
         { "a|action=",  "Действие.", v => action = v },
         { "f|file=",  "Файл с исходными данными.", v => xlsxPath = v },
         { "dr|doc_register_id=",  "Журнал регистрации.", v => extraParameters.Add("doc_register_id", v)},
+        { "d|search_doubles=", "Признак поиска дублей сущностей.", d => ignoreDuplicates = d},
         { "h|help", "Show this help", v => isHelp = (v != null) },
       };
 
@@ -177,7 +182,7 @@ namespace ImportData
           #endregion
 
           #region Выполнение импорта сущностей.
-          ProcessByAction(action.ToLower(), xlsxPath, extraParameters, logger);
+          ProcessByAction(action.ToLower(), xlsxPath, extraParameters, ignoreDuplicates, logger);
           #endregion
         }
         catch (Exception ex)
@@ -205,4 +210,5 @@ namespace ImportData
       }
     }
   }
+
 }

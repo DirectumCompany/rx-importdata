@@ -26,7 +26,7 @@ namespace ImportData
     /// <param name="shift">Сдвиг по горизонтали в XLSX документе. Необходим для обработки документов, составленных из элементов разных сущностей.</param>
     /// <param name="logger">Логировщик.</param>
     /// <returns>Число запрашиваемых параметров.</returns>
-    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, int shift = 0)
+    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, string ignoreDuplicates, int shift = 0)
     {
       var exceptionList = new List<Structures.ExceptionsStruct>();
 
@@ -183,14 +183,18 @@ namespace ImportData
         var note = this.Parameters[shift + 17];
         try
         {
-          var supAgreements = Enumerable.ToList(session.GetAll<Sungero.Contracts.ISupAgreement>().Where(x => x.RegistrationNumber == regNumber));
-          var supAgreement = (Enumerable.FirstOrDefault<Sungero.Contracts.ISupAgreement>(supAgreements));
-          if (supAgreement != null)
+          var supAgreement = Sungero.Contracts.SupAgreements.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            var message = string.Format("Доп.соглашение не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
-            exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
-            logger.Error(message);
-            return exceptionList;
+            var supAgreements = Enumerable.ToList(session.GetAll<Sungero.Contracts.ISupAgreement>().Where(x => x.RegistrationNumber == regNumber));
+            supAgreement = (Enumerable.FirstOrDefault<Sungero.Contracts.ISupAgreement>(supAgreements));
+            if (supAgreement != null)
+            {
+              var message = string.Format("Доп.соглашение не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
 
           var contracts = Enumerable.ToList(session.GetAll<Sungero.Contracts.IContract>().Where(x => x.RegistrationDate == regDateLeadingDocument && x.RegistrationNumber == regNumberLeadingDocument));

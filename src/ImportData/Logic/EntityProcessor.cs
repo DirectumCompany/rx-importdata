@@ -10,7 +10,7 @@ namespace ImportData
 {
   public class EntityProcessor
   {
-    public static void Procces(Type type, string xlsxPath, string sheetName, Dictionary<string, string> extraParameters, Logger logger)
+    public static void Procces(Type type, string xlsxPath, string sheetName, Dictionary<string, string> extraParameters, string searchDoubles, Logger logger)
     {
       if (type.Equals(typeof(Entity)))
       {
@@ -74,7 +74,7 @@ namespace ImportData
           {
             logger.Info($"Обработка сущности {row - 1}");
             watch.Restart();
-            exceptionList = entity.SaveToRX(logger, supplementEntity).ToList();
+            exceptionList = entity.SaveToRX(logger, supplementEntity, searchDoubles).ToList();
             watch.Stop();
             elapsedMs = watch.ElapsedMilliseconds;
             if (!exceptionList.Any())
