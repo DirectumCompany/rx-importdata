@@ -26,7 +26,7 @@ namespace ImportData
     /// <param name="shift">Сдвиг по горизонтали в XLSX документе. Необходим для обработки документов, составленных из элементов разных сущностей.</param>
     /// <param name="logger">Логировщик.</param>
     /// <returns>Число запрашиваемых параметров.</returns>
-    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, int shift = 0)
+    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, string ignoreDuplicates, int shift = 0)
     {
       var exceptionList = new List<Structures.ExceptionsStruct>();
 
@@ -85,7 +85,7 @@ namespace ImportData
         var businessUnit = BusinessLogic.GetBusinessUnit(session, this.Parameters[shift + 6], exceptionList, logger);
         if (businessUnit == null)
         {
-          var message = string.Format("Не найдено подразделение \"{0}\".", this.Parameters[shift + 6]);
+          var message = string.Format("Не найдена НОР \"{0}\".", this.Parameters[shift + 6]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
@@ -174,16 +174,20 @@ namespace ImportData
         var note = this.Parameters[shift + 16];
         try
         {
-          var contracts = Enumerable.ToList(session.GetAll<Sungero.Contracts.IContract>().Where(x => Equals(x.RegistrationNumber, regNumber) &&
+          var contract = Sungero.Contracts.Contracts.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
+          {
+            var contracts = Enumerable.ToList(session.GetAll<Sungero.Contracts.IContract>().Where(x => Equals(x.RegistrationNumber, regNumber) &&
                                                                                                 Equals(x.RegistrationDate, regDate) &&
                                                                                                 Equals(x.Counterparty, counterparty)));
-          var contract = (Enumerable.FirstOrDefault<Sungero.Contracts.IContract>(contracts));
-          if (contract != null)
-          {
-            var message = string.Format("Договор не может быть импортирован. Найден дубль с такими же реквизитами \"Рег. №\" {0}, \"Дата документа\" {1}, \"Контрагент\" {2}.", regNumber, regDate.ToString(), counterparty.ToString());
-            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-            logger.Error(message);
-            return exceptionList;
+            contract = (Enumerable.FirstOrDefault<Sungero.Contracts.IContract>(contracts));
+            if (contract != null)
+            {
+              var message = string.Format("Договор не может быть импортирован. Найден дубль с такими же реквизитами \"Рег. №\" {0}, \"Дата документа\" {1}, \"Контрагент\" {2}.", regNumber, regDate.ToString(), counterparty.ToString());
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
           contract = session.Create<Sungero.Contracts.IContract>();
           contract.Counterparty = counterparty;

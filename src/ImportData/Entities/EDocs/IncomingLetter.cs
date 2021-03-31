@@ -26,7 +26,7 @@ namespace ImportData
     /// <param name="shift">Сдвиг по горизонтали в XLSX документе. Необходим для обработки документов, составленных из элементов разных сущностей.</param>
     /// <param name="logger">Логировщик.</param>
     /// <returns>Число запрашиваемых параметров.</returns>
-    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, int shift = 0)
+    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, string ignoreDuplicates, int shift = 0)
     {
       var exceptionList = new List<Structures.ExceptionsStruct>();
 
@@ -116,14 +116,18 @@ namespace ImportData
         var note = this.Parameters[shift + 11];
         try
         {
-          var incomingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IIncomingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
-          var incomingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IIncomingLetter>(incomingLetters));
-          if (incomingLetter != null)
+          var incomingLetter = Sungero.RecordManagement.IncomingLetters.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            var message = string.Format("Входящее письмо не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
-            exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
-            logger.Error(message);
-            return exceptionList;
+            var incomingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IIncomingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
+            incomingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IIncomingLetter>(incomingLetters));
+            if (incomingLetter != null)
+            {
+              var message = string.Format("Входящее письмо не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+              logger.Error(message);
+              return exceptionList;
+            }
           }
 
           incomingLetter = session.Create<Sungero.RecordManagement.IIncomingLetter>();

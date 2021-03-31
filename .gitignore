@@ -92,3 +92,26 @@ ENV/
 
 # Rope project settings
 .ropeproject
+/src/ImportData/bin/Debug/_ConfigSettings.xml
+/src/ImportData/bin/Debug/ADIntegration.pdb
+/src/ImportData/bin/Debug/Common.Logging.Core.pdb
+/src/ImportData/bin/Debug/Common.Logging.pdb
+/src/ImportData/bin/Debug/ImportData.application
+/src/ImportData/bin/Debug/ImportData.exe.config
+/src/ImportData/bin/Debug/ImportData.pdb
+/src/ImportData/bin/Debug/ImportData.vshost.application
+/src/ImportData/bin/Debug/ImportData.vshost.exe.config
+/src/ImportData/bin/Debug/NLog.config
+/src/ImportData/bin/Debug/Services.client.config
+/src/ImportData/bin/Debug/Services.client.live.config
+/src/ImportData/bin/Debug/Spring.Aop.pdb
+/src/ImportData/bin/Debug/Spring.Core.pdb
+/src/ImportData/bin/Debug/Sungero.Domain.Interfaces.pdb
+/src/ImportData/bin/Debug/Sungero.Sync1C.pdb
+/src/ImportData/bin/Debug/System.Windows.Interactivity.xml
+/src/ImportData/bin/Debug/Unity.Abstractions.pdb
+/src/ImportData/bin/Debug/Unity.Configuration.pdb
+/src/ImportData/bin/Debug/Unity.Container.pdb
+/src/ImportData/ImportData_TemporaryKey.pfx
+/src/.vs/ImportData/v14/.suo
+/src/ImportData/ImportData.csproj

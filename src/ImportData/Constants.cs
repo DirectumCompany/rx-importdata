@@ -34,6 +34,7 @@ namespace ImportData
       public const string IncomingLetters = "ВходящиеПисьма";
       public const string OutgoingLetters = "ИсходящиеПисьма";
       public const string Orders = "Приказы и Распоряжения";
+      public const string Addendums = "Приложения";
     }
 
     public class Actions
@@ -46,6 +47,7 @@ namespace ImportData
       public const string ImportIncomingLetters = "importincomingletters";
       public const string ImportOutgoingLetters = "importoutgoingletters";
       public const string ImportOrders = "importorders";
+      public const string ImportAddendums = "importaddendums";
 
       public static Dictionary<string, string> dictActions = new Dictionary<string, string>
       {
@@ -56,7 +58,8 @@ namespace ImportData
         {ImportSupAgreements, ImportSupAgreements},
         {ImportIncomingLetters, ImportIncomingLetters},
         {ImportOutgoingLetters, ImportOutgoingLetters},
-        {ImportOrders, ImportOrders}
+        {ImportOrders, ImportOrders},
+        {ImportAddendums, ImportAddendums}
       };
     }
 
@@ -66,5 +69,11 @@ namespace ImportData
       public const string IncorrecTrrcLength = "КПП должен содержать 9 цифр.";
       public const string IncorrecCodeDepartmentLength = "Код подраздленения не должен содержать больше 10 цифр.";
     }
+
+    public const string ignoreDuplicates = "ignore_duplicates";
+    public static Dictionary<string, string> dictIgnoreDuplicates = new Dictionary<string, string>
+    {
+      { ignoreDuplicates, ignoreDuplicates}
+    };
   }
 }
