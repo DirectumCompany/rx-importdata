@@ -1,1 +1,1 @@
-start "ImportData" /D %cd%\ /I cmd.exe
+start "ImportData" /D "%cd%"\ /I cmd.exe

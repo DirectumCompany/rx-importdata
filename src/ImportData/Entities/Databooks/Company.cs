@@ -26,7 +26,7 @@ namespace ImportData
     /// <param name="shift">Сдвиг по горизонтали в XLSX документе. Необходим для обработки документов, составленных из элементов разных сущностей.</param>
     /// <param name="logger">Логировщик.</param>
     /// <returns>Число запрашиваемых параметров.</returns>
-    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, int shift = 0)
+    public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, string ignoreDuplicates, int shift = 0)
     {
       
       var exceptionList = new List<Structures.ExceptionsStruct>();
@@ -118,24 +118,27 @@ namespace ImportData
             return exceptionList;
           }
 
-          var companies = Enumerable.ToList(session.GetAll<Sungero.Parties.ICompany>().Where(x => x.Name == name || 
-            (!string.IsNullOrEmpty(tin) && x.TIN == tin && !string.IsNullOrEmpty(trrc) && x.TRRC == trrc) ||
-            !string.IsNullOrEmpty(psrn) && x.PSRN == psrn));
-          var company = (Enumerable.FirstOrDefault<Sungero.Parties.ICompany>(companies));
-          
-          if (company != null)
+          var company = Sungero.Parties.Companies.Null;
+          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            if (!supplementEntity)
+            var companies = Enumerable.ToList(session.GetAll<Sungero.Parties.ICompany>().Where(x => x.Name == name ||
+                        (!string.IsNullOrEmpty(tin) && x.TIN == tin && !string.IsNullOrEmpty(trrc) && x.TRRC == trrc) ||
+                        !string.IsNullOrEmpty(psrn) && x.PSRN == psrn));
+            company = (Enumerable.FirstOrDefault<Sungero.Parties.ICompany>(companies));
+
+            if (company != null)
             {
-              var message = string.Format("Компания не может быть импортирована. Найден дубль по реквизитам Наименование: \"{0}\", ИНН: {1} + КПП {2}, ОГРН: {3}.", name, tin, trrc, psrn);
-              exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
-              logger.Error(message);
-              return exceptionList;
+              if (!supplementEntity)
+              {
+                var message = string.Format("Компания не может быть импортирована. Найден дубль по реквизитам Наименование: \"{0}\", ИНН: {1} + КПП {2}, ОГРН: {3}.", name, tin, trrc, psrn);
+                exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+                logger.Error(message);
+                return exceptionList;
+              }
             }
           }
-          else
-            company = session.Create<Sungero.Parties.ICompany>();
 
+          company = session.Create<Sungero.Parties.ICompany>();
           company.Name = name;
           company.LegalName = legalName;
           company.HeadCompany = headCompany;
