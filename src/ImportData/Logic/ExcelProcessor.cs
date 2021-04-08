@@ -246,6 +246,10 @@ namespace ImportData
       }
       catch (Exception ex)
       {
+        var indexOut = string.Empty;
+        if (ex is System.IndexOutOfRangeException)
+          indexOut = "Проверьте корректность полей и заполненных данных в шаблоне";
+
         throw new Exception(string.Format("Не удалось обработать файл xlsx. Обратитесь к администратору системы. Подробности: {0}", ex.Message), ex);
       }
       return result;
