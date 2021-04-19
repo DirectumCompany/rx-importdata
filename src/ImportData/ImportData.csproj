@@ -284,7 +284,7 @@
       <HintPath>\\orpihost\Sungero\DirectumX\3.6.29.0\DrxUtil\Sungero.Domain.ClientBase.dll</HintPath>
     </Reference>
     <Reference Include="Sungero.Domain.Interfaces">
-      <HintPath>..\..\..\..\..\inetpub\wwwroot\DirectumRxLocal\bin\AppliedModules\Sungero.Domain.Interfaces.dll</HintPath>
+      <HintPath>..\..\Libs\Sungero.Domain.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="Sungero.Domain.Shared, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

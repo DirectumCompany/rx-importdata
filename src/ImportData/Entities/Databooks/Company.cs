@@ -10,7 +10,7 @@ namespace ImportData
 {
   class Company : Entity
   {
-    public int PropertiesCount = 19;
+    public int PropertiesCount = 20;
     /// <summary>
     /// Получить наименование число запрашиваемых параметров.
     /// </summary>
@@ -77,12 +77,19 @@ namespace ImportData
         var phones = this.Parameters[shift + 13].Trim();
         var email = this.Parameters[shift + 14].Trim();
         var homepage = this.Parameters[shift + 15].Trim();
-        var note = this.Parameters[shift + 16].Trim();
-        var account = this.Parameters[shift + 17].Trim();
-        var bank = BusinessLogic.GetBank(session, this.Parameters[shift + 18].Trim(), exceptionList, logger);
-        if (!string.IsNullOrEmpty(this.Parameters[shift + 18]) && bank == null)
+        var responsible = BusinessLogic.GetEmployee(session, this.Parameters[shift + 16].Trim(), exceptionList, logger);
+        if (!string.IsNullOrEmpty(this.Parameters[shift + 16].Trim()) && responsible == null)
         {
-          var message = string.Format("Не найден Банк \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 18].Trim());
+          var message = string.Format("Не найден Ответственный \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 16].Trim());
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
+          logger.Warn(message);
+        }
+        var note = this.Parameters[shift + 17].Trim();
+        var account = this.Parameters[shift + 18].Trim();
+        var bank = BusinessLogic.GetBank(session, this.Parameters[shift + 19].Trim(), exceptionList, logger);
+        if (!string.IsNullOrEmpty(this.Parameters[shift + 19]) && bank == null)
+        {
+          var message = string.Format("Не найден Банк \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 19].Trim());
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
           logger.Warn(message);
         }
@@ -155,6 +162,7 @@ namespace ImportData
           company.Phones = phones;
           company.Email = email;
           company.Homepage = homepage;
+          company.Responsible = responsible;
           company.Note = note;
           company.Account = account;
           company.Bank = bank;
