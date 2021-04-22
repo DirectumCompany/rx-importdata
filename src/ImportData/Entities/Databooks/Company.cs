@@ -53,36 +53,37 @@ namespace ImportData
         var headCompany = Sungero.Parties.Companies.As(counterparty);
 
         var nonresident = this.Parameters[shift + 3] == "Да" ? true : false;
-        var tin = this.Parameters[shift + 4].Trim();
-        var trrc = this.Parameters[shift + 5].Trim();
-        var psrn = this.Parameters[shift + 6].Trim();
-        var nceo = this.Parameters[shift + 7].Trim();
-        var ncea = this.Parameters[shift + 8].Trim();
-        var city = BusinessLogic.GetCity(session, this.Parameters[shift + 9].Trim(), exceptionList, logger);
-        if (!string.IsNullOrEmpty(this.Parameters[shift + 9].Trim()) && city == null)
+        var code = this.Parameters[shift + 4].Trim();
+        var tin = this.Parameters[shift + 5].Trim();
+        var trrc = this.Parameters[shift + 6].Trim();
+        var psrn = this.Parameters[shift + 7].Trim();
+        var nceo = this.Parameters[shift + 8].Trim();
+        var ncea = this.Parameters[shift + 9].Trim();
+        var city = BusinessLogic.GetCity(session, this.Parameters[shift + 10].Trim(), exceptionList, logger);
+        if (!string.IsNullOrEmpty(this.Parameters[shift + 10].Trim()) && city == null)
         {
-          var message = string.Format("Не найден Населенный пункт \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 9].Trim());
+          var message = string.Format("Не найден Населенный пункт \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 10].Trim());
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
           logger.Warn(message);
         }
-        var region = BusinessLogic.GetRegion(session, this.Parameters[shift + 10].Trim(), exceptionList, logger);
-        if (!string.IsNullOrEmpty(this.Parameters[shift + 10].Trim()) && region == null)
+        var region = BusinessLogic.GetRegion(session, this.Parameters[shift + 11].Trim(), exceptionList, logger);
+        if (!string.IsNullOrEmpty(this.Parameters[shift + 11].Trim()) && region == null)
         {
-          var message = string.Format("Не найден Регион \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 10].Trim());
+          var message = string.Format("Не найден Регион \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 11].Trim());
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
           logger.Warn(message);
         }
-        var legalAdress = this.Parameters[shift + 11].Trim();
-        var postalAdress = this.Parameters[shift + 12].Trim();
-        var phones = this.Parameters[shift + 13].Trim();
-        var email = this.Parameters[shift + 14].Trim();
-        var homepage = this.Parameters[shift + 15].Trim();
-        var note = this.Parameters[shift + 16].Trim();
-        var account = this.Parameters[shift + 17].Trim();
-        var bank = BusinessLogic.GetBank(session, this.Parameters[shift + 18].Trim(), exceptionList, logger);
-        if (!string.IsNullOrEmpty(this.Parameters[shift + 18]) && bank == null)
+        var legalAdress = this.Parameters[shift + 12].Trim();
+        var postalAdress = this.Parameters[shift + 13].Trim();
+        var phones = this.Parameters[shift + 14].Trim();
+        var email = this.Parameters[shift + 15].Trim();
+        var homepage = this.Parameters[shift + 16].Trim();
+        var note = this.Parameters[shift + 17].Trim();
+        var account = this.Parameters[shift + 18].Trim();
+        var bank = BusinessLogic.GetBank(session, this.Parameters[shift + 19].Trim(), exceptionList, logger);
+        if (!string.IsNullOrEmpty(this.Parameters[shift + 19]) && bank == null)
         {
-          var message = string.Format("Не найден Банк \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 18].Trim());
+          var message = string.Format("Не найден Банк \"{1}\". Наименование организации: \"{0}\". ", name, this.Parameters[shift + 19].Trim());
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
           logger.Warn(message);
         }
@@ -143,6 +144,7 @@ namespace ImportData
           company.LegalName = legalName;
           company.HeadCompany = headCompany;
           company.Nonresident = nonresident;
+          company.Code = code;
           company.TIN = tin;
           company.TRRC = trrc;
           company.PSRN = psrn;

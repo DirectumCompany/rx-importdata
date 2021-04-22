@@ -7,8 +7,6 @@ __pycache__/
 *.so
 
 # dlls and exe
-*.dll
-*.exe
 
 # Distribution / packaging
 .Python
