@@ -100,21 +100,12 @@ namespace ImportData
             return exceptionList;
           }
 
-          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
-          {
-            var addendums = Enumerable.ToList(session.GetAll<Sungero.Docflow.IAddendum>().Where(x => Equals(x.LeadingDocument, leadingDocument) && Equals(x.DocumentKind, documentKind) && x.Subject == subject));
-            addendum = (Enumerable.FirstOrDefault<Sungero.Docflow.IAddendum>(addendums));
-            if (addendum != null)
-            {
-              var message = string.Format("Приложение не может быть импортировано. Найден дубль с такими же реквизитами \"Вид документа\" {0}, \"Ведущий документ\" {1}, \"Содержание\" {2}.", documentKind, leadingDocument, subject);
-              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-              logger.Error(message);
-              return exceptionList;
-            }
-          }
+          var addendums = Enumerable.ToList(session.GetAll<Sungero.Docflow.IAddendum>().Where(x => Equals(x.LeadingDocument, leadingDocument) && Equals(x.DocumentKind, documentKind) && x.Subject == subject));
+          addendum = (Enumerable.FirstOrDefault<Sungero.Docflow.IAddendum>(addendums));
 
           // HACK: Создаем 2 сессии. В первой загружаем данные, во второй создаем объект системы.
-          addendum = session.Create<Sungero.Docflow.IAddendum>();
+          if (addendum == null)
+            addendum = session.Create<Sungero.Docflow.IAddendum>();
 
           session.Clear();
           session.Dispose();

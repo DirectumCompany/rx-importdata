@@ -40,7 +40,7 @@ namespace ImportData
         if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 1]) && !double.TryParse(this.Parameters[shift + 1].Trim(), style, culture, out regDateDouble))
         {
           var message = string.Format("Не удалось обработать дату регистрации \"{0}\".", this.Parameters[shift + 1]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -54,7 +54,7 @@ namespace ImportData
         if (counterparty == null)
         {
           var message = string.Format("Не найден контрагент \"{0}\".", this.Parameters[shift + 2]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -63,18 +63,18 @@ namespace ImportData
         if (documentKind == null)
         {
           var message = string.Format("Не найден вид документа \"{0}\".", this.Parameters[shift + 3]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
 
         var subject = this.Parameters[shift + 4];
 
-        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 5], exceptionList, logger);
+        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 5], null, exceptionList, logger);
         if (department == null)
         {
           var message = string.Format("Не найдено подразделение \"{0}\".", this.Parameters[shift + 5]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -93,20 +93,12 @@ namespace ImportData
         try
         {
           var outgoingLetter = Sungero.RecordManagement.OutgoingLetters.Null;
-          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
-          {
-            var outgoingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IOutgoingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
-            outgoingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IOutgoingLetter>(outgoingLetters));
-            if (outgoingLetter != null)
-            {
-              var message = string.Format("Исходящее письмо не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
-              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-              logger.Error(message);
-              return exceptionList;
-            }
-          }
 
-          outgoingLetter = session.Create<Sungero.RecordManagement.IOutgoingLetter>();
+          var outgoingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IOutgoingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
+          outgoingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IOutgoingLetter>(outgoingLetters));
+
+          if (outgoingLetter == null)
+            outgoingLetter = session.Create<Sungero.RecordManagement.IOutgoingLetter>();
           outgoingLetter.Correspondent = counterparty;
           if (regDate != DateTime.MinValue)
             outgoingLetter.RegistrationDate = regDate;
@@ -128,14 +120,14 @@ namespace ImportData
             else
             {
               var message = string.Format("Не удалось обработать параметр \"doc_register_id\". Полученное значение: {0}.", ExtraParameters["doc_register_id"]);
-              exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
               logger.Error(message);
               return exceptionList;
             }
         }
         catch (Exception ex)
         {
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = ex.Message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = ex.Message });
           return exceptionList;
         }
         session.SubmitChanges();

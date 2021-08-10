@@ -70,7 +70,7 @@ namespace ImportData
           return exceptionList;
         }
 
-        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 5], exceptionList, logger);
+        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 5], null, exceptionList, logger);
         if (department == null)
         {
           var message = string.Format("Не найдено подразделение \"{0}\".", this.Parameters[shift + 5]);
@@ -119,20 +119,12 @@ namespace ImportData
         try
         {
           var order = Sungero.RecordManagement.Orders.Null;
-          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
-          {
-            var orders = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IOrder>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
-            order = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IOrder>(orders));
-            if (order != null)
-            {
-              var message = string.Format("Приказ/распоряжение не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString(), regNumber);
-              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-              logger.Error(message);
-              return exceptionList;
-            }
-          }
+          var orders = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IOrder>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
+          order = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IOrder>(orders));
 
-          order = session.Create<Sungero.RecordManagement.IOrder>();
+          if (order == null)
+            order = session.Create<Sungero.RecordManagement.IOrder>();
+
           if (regDate != null)
             order.RegistrationDate = regDate;
           order.RegistrationNumber = regNumber;

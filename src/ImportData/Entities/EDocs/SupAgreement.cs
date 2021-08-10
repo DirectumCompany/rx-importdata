@@ -40,7 +40,7 @@ namespace ImportData
         if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 1]) && !double.TryParse(this.Parameters[shift + 1].Trim(), style, culture, out regDateDouble))
         {
           var message = string.Format("Не удалось обработать дату регистрации \"{0}\".", this.Parameters[shift + 1]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -57,7 +57,7 @@ namespace ImportData
         if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 3]) && !double.TryParse(this.Parameters[shift + 3].Trim(), style, culture, out regDateLeadingDocumentDouble))
         {
           var message = string.Format("Не удалось обработать дату регистрации ведущего документа \"{0}\".", this.Parameters[shift + 3]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -71,7 +71,7 @@ namespace ImportData
         if (counterparty == null)
         {
           var message = string.Format("Не найден контрагент \"{0}\".", this.Parameters[shift + 4]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -80,7 +80,7 @@ namespace ImportData
         if (documentKind == null)
         {
           var message = string.Format("Не найден вид документа \"{0}\".", this.Parameters[shift + 5]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -96,11 +96,11 @@ namespace ImportData
           return exceptionList;
         }
 
-        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 8], exceptionList, logger);
+        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 8], null, exceptionList, logger);
         if (department == null)
         {
           var message = string.Format("Не найдено подразделение \"{0}\".", this.Parameters[shift + 8]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -121,7 +121,7 @@ namespace ImportData
           if (!string.IsNullOrEmpty(this.Parameters[shift + 10].ToString()))
             validFrom = DateTime.FromOADate(validFromDouble);
           //else
-            //validFrom = null;
+          //validFrom = null;
         }
 
         var validTill = DateTime.MinValue;
@@ -129,7 +129,7 @@ namespace ImportData
         if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 11]) && !double.TryParse(this.Parameters[shift + 11].Trim(), style, culture, out validTillDouble))
         {
           var message = string.Format("Не удалось обработать значение в поле \"Действует по\" \"{0}\".", this.Parameters[shift + 11]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -138,14 +138,14 @@ namespace ImportData
           if (!string.IsNullOrEmpty(this.Parameters[shift + 11].ToString()))
             validTill = DateTime.FromOADate(validTillDouble);
           //else
-            //validTill = null;
+          //validTill = null;
         }
 
         var totalAmount = 0.0;
         if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 12]) && !double.TryParse(this.Parameters[shift + 12].Trim(), style, culture, out totalAmount))
         {
           var message = string.Format("Не удалось обработать значение в поле \"Сумма\" \"{0}\".", this.Parameters[shift + 12]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -154,7 +154,7 @@ namespace ImportData
         if (!string.IsNullOrEmpty(this.Parameters[shift + 13].Trim()) && currency == null)
         {
           var message = string.Format("Не найдено соответствующее наименование валюты \"{0}\".", this.Parameters[shift + 13]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -162,7 +162,7 @@ namespace ImportData
         if (!string.IsNullOrEmpty(this.Parameters[shift + 14].Trim()) && lifeCycleState == null)
         {
           var message = string.Format("Не найдено соответствующее значение состояния \"{0}\".", this.Parameters[shift + 14]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -183,33 +183,26 @@ namespace ImportData
         var note = this.Parameters[shift + 17];
         try
         {
-          var supAgreement = Sungero.Contracts.SupAgreements.Null;
-          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
-          {
-            var supAgreements = Enumerable.ToList(session.GetAll<Sungero.Contracts.ISupAgreement>().Where(x => x.RegistrationNumber == regNumber));
-            supAgreement = (Enumerable.FirstOrDefault<Sungero.Contracts.ISupAgreement>(supAgreements));
-            if (supAgreement != null)
-            {
-              var message = string.Format("Доп.соглашение не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
-              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-              logger.Error(message);
-              return exceptionList;
-            }
-          }
-
           var contracts = Enumerable.ToList(session.GetAll<Sungero.Contracts.IContract>()
             .Where(x => x.RegistrationDate == regDateLeadingDocument && x.RegistrationNumber == regNumberLeadingDocument && x.Counterparty.Equals(counterparty)));
           var leadingDocument = (Enumerable.FirstOrDefault<Sungero.Contracts.IContract>(contracts));
           if (leadingDocument == null)
           {
             var message = string.Format("Доп.соглашение не может быть импортировано. Не найден ведущий документ с реквизитами \"Дата документа\" {0}, \"Рег. №\" {1} и \"Контрагент\" {2}.", regDateLeadingDocument.ToString("d"), regNumberLeadingDocument, counterparty.Name);
-            exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
             logger.Error(message);
             return exceptionList;
           }
 
           // HACK: Создаем 2 сессии. В первой загружаем данные, во второй создаем объект системы.
-          supAgreement = session.Create<Sungero.Contracts.ISupAgreement>();
+
+          var supAgreement = Sungero.Contracts.SupAgreements.Null;
+
+          var supAgreements = Enumerable.ToList(session.GetAll<Sungero.Contracts.ISupAgreement>().Where(x => x.RegistrationNumber == regNumber));
+          supAgreement = (Enumerable.FirstOrDefault<Sungero.Contracts.ISupAgreement>(supAgreements));
+
+          if (supAgreement == null)
+            supAgreement = session.Create<Sungero.Contracts.ISupAgreement>();
 
           session.Clear();
           session.Dispose();
@@ -249,14 +242,14 @@ namespace ImportData
             else
             {
               var message = string.Format("Не удалось обработать параметр \"doc_register_id\". Полученное значение: {0}.", ExtraParameters["doc_register_id"]);
-              exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
               logger.Error(message);
               return exceptionList;
             }
         }
         catch (Exception ex)
         {
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = ex.Message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = ex.Message });
           return exceptionList;
         }
       }

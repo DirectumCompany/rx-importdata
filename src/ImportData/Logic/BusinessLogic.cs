@@ -328,10 +328,10 @@ namespace ImportData
     /// <param name="exceptionList">Список ошибок.</param>
     /// <param name="logger">Логировщик.</param>
     /// <returns>Подразделение.</returns>
-    public static Sungero.Company.IDepartment GetDepartment(Session session, string departmentName, List<Structures.ExceptionsStruct> exceptionList, NLog.Logger logger)
+    public static Sungero.Company.IDepartment GetDepartment(Session session, string departmentName, int? businessUnitId, List<Structures.ExceptionsStruct> exceptionList, NLog.Logger logger)
     {
       // TODO Кэшировать.
-      var departments = Enumerable.ToList(session.GetAll<Sungero.Company.IDepartment>().Where(x => x.Name == departmentName));
+      var departments = Enumerable.ToList(session.GetAll<Sungero.Company.IDepartment>().Where(x => x.Name == departmentName && businessUnitId.HasValue && x.BusinessUnit.Id == businessUnitId));
       var department = (Enumerable.FirstOrDefault<Sungero.Company.IDepartment>(departments));
       if (departments.Count > 1)
       {

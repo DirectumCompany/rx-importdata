@@ -41,7 +41,7 @@ namespace ImportData
           return exceptionList;
         }
         var shortName = this.Parameters[shift + 1].Trim();
-        var headOffice = BusinessLogic.GetDepartment(session, this.Parameters[shift + 2].Trim(), exceptionList, logger);
+        var headOffice = BusinessLogic.GetDepartment(session, this.Parameters[shift + 2].Trim(), null, exceptionList, logger);
         if (!string.IsNullOrEmpty(this.Parameters[shift + 2].Trim()) && headOffice == null)
         {
           headOffice = BusinessLogic.CreateDepartment(session, this.Parameters[shift + 2].Trim(), exceptionList, logger);

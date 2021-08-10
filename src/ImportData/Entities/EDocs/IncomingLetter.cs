@@ -69,7 +69,7 @@ namespace ImportData
 
         var subject = this.Parameters[shift + 4];
 
-        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 5], exceptionList, logger);
+        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 5], null, exceptionList, logger);
         if (department == null)
         {
           var message = string.Format("Не найдено подразделение \"{0}\".", this.Parameters[shift + 5]);
@@ -117,20 +117,13 @@ namespace ImportData
         try
         {
           var incomingLetter = Sungero.RecordManagement.IncomingLetters.Null;
-          if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
-          {
-            var incomingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IIncomingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
-            incomingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IIncomingLetter>(incomingLetters));
-            if (incomingLetter != null)
-            {
-              var message = string.Format("Входящее письмо не может быть импортировано. Найден дубль с такими же реквизитами \"Дата документа\" {0} и \"Рег. №\" {1}.", regDate.ToString("d"), regNumber);
-              exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
-              logger.Error(message);
-              return exceptionList;
-            }
-          }
 
-          incomingLetter = session.Create<Sungero.RecordManagement.IIncomingLetter>();
+          var incomingLetters = Enumerable.ToList(session.GetAll<Sungero.RecordManagement.IIncomingLetter>().Where(x => x.RegistrationNumber == regNumber && regDate != DateTime.MinValue && x.RegistrationDate == regDate));
+          incomingLetter = (Enumerable.FirstOrDefault<Sungero.RecordManagement.IIncomingLetter>(incomingLetters));
+
+          if (incomingLetter == null)
+            incomingLetter = session.Create<Sungero.RecordManagement.IIncomingLetter>();
+
           if (regDate != DateTime.MinValue)
             incomingLetter.RegistrationDate = regDate;
           incomingLetter.RegistrationNumber = regNumber;

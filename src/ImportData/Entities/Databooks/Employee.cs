@@ -59,7 +59,7 @@ namespace ImportData
           return exceptionList;
         }
         var name = person.Name;
-        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 0].Trim(), exceptionList, logger);
+        var department = BusinessLogic.GetDepartment(session, this.Parameters[shift + 0].Trim(), null, exceptionList, logger);
         if (department == null && !string.IsNullOrEmpty(this.Parameters[shift + 0].Trim()))
         {
           department = BusinessLogic.CreateDepartment(session, this.Parameters[shift + 0].Trim(), exceptionList, logger);
