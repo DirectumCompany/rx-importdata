@@ -38,7 +38,7 @@ namespace ImportData
         var culture = CultureInfo.CreateSpecificCulture("en-GB");
         try
         {
-          regDate = Parse(this.Parameters[shift + 1], style, culture);
+          regDate = ParseDate(this.Parameters[shift + 1], style, culture);
         }
         catch (Exception)
         {
@@ -53,7 +53,7 @@ namespace ImportData
         var regDateLeadingDocument = DateTime.MinValue;
         try
         {
-          regDateLeadingDocument = Parse(this.Parameters[shift + 3], style, culture);
+          regDateLeadingDocument = ParseDate(this.Parameters[shift + 3], style, culture);
         }
         catch (Exception)
         {
@@ -106,7 +106,7 @@ namespace ImportData
         var validFrom = DateTime.MinValue;
         try
         {
-          validFrom = Parse(this.Parameters[shift + 10], style, culture);
+          validFrom = ParseDate(this.Parameters[shift + 10], style, culture);
         }
         catch (Exception)
         {
@@ -119,7 +119,7 @@ namespace ImportData
         var validTill = DateTime.MinValue;
         try
         {
-          validTill = Parse(this.Parameters[shift + 11], style, culture);
+          validTill = ParseDate(this.Parameters[shift + 11], style, culture);
         }
         catch (Exception)
         {

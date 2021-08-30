@@ -37,7 +37,7 @@ namespace ImportData
         if (string.IsNullOrEmpty(lastName))
         {
           var message = string.Format("Не заполнено поле \"Фамилия\".");
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = "Error", Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = "Error", Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -45,7 +45,7 @@ namespace ImportData
         if (string.IsNullOrEmpty(firstName))
         {
           var message = string.Format("Не заполнено поле \"Имя\".");
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = "Error", Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = "Error", Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -54,17 +54,15 @@ namespace ImportData
         var dateOfBirth = DateTime.MinValue;
         var style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
         var culture = CultureInfo.CreateSpecificCulture("en-GB");
-        var dateOfBirthDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 4]))
+        try
         {
-          if (double.TryParse(this.Parameters[shift + 4].Trim(), style, culture, out dateOfBirthDouble))
-            dateOfBirth = DateTime.FromOADate(dateOfBirthDouble);
-          else
-          {
-            var message = string.Format("Не удалось обработать значение в поле \"Дата рождения\" \"{0}\".", this.Parameters[shift + 4]);
-            exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
-            logger.Warn(message);
-          }
+          dateOfBirth = ParseDate(this.Parameters[shift + 1], style, culture);
+        }
+        catch (Exception)
+        {
+          var message = string.Format("Не удалось обработать значение в поле \"Дата рождения\" \"{0}\".", this.Parameters[shift + 4]);
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
+          logger.Warn(message);
         }
         var tin = this.Parameters[shift + 5].Trim();
         var inila = this.Parameters[shift + 6].Trim();
@@ -139,7 +137,7 @@ namespace ImportData
         }
         catch (Exception ex)
         {
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = "Error", Message = ex.Message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = "Error", Message = ex.Message });
           return exceptionList;
         }
         session.SubmitChanges();

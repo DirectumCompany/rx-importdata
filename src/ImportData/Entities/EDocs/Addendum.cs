@@ -4,6 +4,7 @@ using NLog;
 using System.Linq;
 using Sungero.Domain.Client;
 using Sungero.Domain.ClientLinqExpressions;
+using System.Globalization;
 
 namespace ImportData
 {
@@ -45,11 +46,11 @@ namespace ImportData
         using (var session = new Session())
         {
           regNumberLeadingDocument = this.Parameters[shift + 0];
-          regDateLeadingDocument = DateTime.MinValue;
-          double regDateLeadingDocumentDouble;
-          if (double.TryParse(this.Parameters[shift + 1], out regDateLeadingDocumentDouble))
-            regDateLeadingDocument = DateTime.FromOADate(regDateLeadingDocumentDouble);
-          else
+          try
+          {
+            regDateLeadingDocument = ParseDate(this.Parameters[shift + 1], NumberStyles.Number | NumberStyles.AllowCurrencySymbol, CultureInfo.CreateSpecificCulture("en-GB"));
+          }
+          catch (Exception)
           {
             var message = string.Format("Не удалось обработать дату ведущего документа \"{0}\".", this.Parameters[shift + 1]);
             exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });

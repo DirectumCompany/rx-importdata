@@ -41,7 +41,7 @@ namespace ImportData
     /// <param name="culture">Культура.</param>
     /// <returns>Преобразованная дата.</returns>
     /// <exception cref="FormatException" />
-    public DateTime Parse(string value, NumberStyles style, CultureInfo culture)
+    public DateTime ParseDate(string value, NumberStyles style, CultureInfo culture)
     {
       if (!string.IsNullOrEmpty(value))
       {
