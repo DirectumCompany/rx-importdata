@@ -36,35 +36,31 @@ namespace ImportData
         var regDate = DateTime.MinValue;
         var style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
         var culture = CultureInfo.CreateSpecificCulture("en-GB");
-        var regDateDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 1]) && !double.TryParse(this.Parameters[shift + 1].Trim(), style, culture, out regDateDouble))
+        try
+        {
+          regDate = Parse(this.Parameters[shift + 1], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать дату регистрации \"{0}\".", this.Parameters[shift + 1]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 1].ToString()))
-            regDate = DateTime.FromOADate(regDateDouble);
-        }
 
         var regNumberLeadingDocument = this.Parameters[shift + 2];
 
         var regDateLeadingDocument = DateTime.MinValue;
-        var regDateLeadingDocumentDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 3]) && !double.TryParse(this.Parameters[shift + 3].Trim(), style, culture, out regDateLeadingDocumentDouble))
+        try
+        {
+          regDateLeadingDocument = Parse(this.Parameters[shift + 3], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать дату регистрации ведущего документа \"{0}\".", this.Parameters[shift + 3]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
-        }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 3].ToString()))
-            regDateLeadingDocument = DateTime.FromOADate(regDateLeadingDocumentDouble);
         }
 
         var counterparty = BusinessLogic.GetConterparty(session, this.Parameters[shift + 4], exceptionList, logger);
@@ -108,37 +104,29 @@ namespace ImportData
         var filePath = this.Parameters[shift + 9];
 
         var validFrom = DateTime.MinValue;
-        var validFromDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 10]) && !double.TryParse(this.Parameters[shift + 10].Trim(), style, culture, out validFromDouble))
+        try
+        {
+          validFrom = Parse(this.Parameters[shift + 10], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать значение в поле \"Действует с\" \"{0}\".", this.Parameters[shift + 10]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 10].ToString()))
-            validFrom = DateTime.FromOADate(validFromDouble);
-          //else
-          //validFrom = null;
-        }
 
         var validTill = DateTime.MinValue;
-        var validTillDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 11]) && !double.TryParse(this.Parameters[shift + 11].Trim(), style, culture, out validTillDouble))
+        try
+        {
+          validTill = Parse(this.Parameters[shift + 11], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать значение в поле \"Действует по\" \"{0}\".", this.Parameters[shift + 11]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
-        }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 11].ToString()))
-            validTill = DateTime.FromOADate(validTillDouble);
-          //else
-          //validTill = null;
         }
 
         var totalAmount = 0.0;
