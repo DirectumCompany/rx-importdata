@@ -56,7 +56,7 @@ namespace ImportData
         var culture = CultureInfo.CreateSpecificCulture("en-GB");
         try
         {
-          dateOfBirth = ParseDate(this.Parameters[shift + 1], style, culture);
+          dateOfBirth = ParseDate(this.Parameters[shift + 4], style, culture);
         }
         catch (Exception)
         {
