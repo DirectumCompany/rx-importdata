@@ -34,7 +34,7 @@ namespace ImportData
     }
 
     /// <summary>
-    /// Преобразовать зачение в дату.
+    /// Преобразовать значение в дату.
     /// </summary>
     /// <param name="value">Значение.</param>
     /// <param name="style">Стиль преобразования числовой строки.</param>
