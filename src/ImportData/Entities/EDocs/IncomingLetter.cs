@@ -36,19 +36,18 @@ namespace ImportData
         var regDate = DateTime.MinValue;
         var style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
         var culture = CultureInfo.CreateSpecificCulture("en-GB");
-        var regDateDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 1]) && !double.TryParse(this.Parameters[shift + 1].Trim(), style, culture, out regDateDouble))
+        try
+        {
+          regDate = ParseDate(this.Parameters[shift + 1], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать дату регистрации \"{0}\".", this.Parameters[shift + 1]);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 1].ToString()))
-            regDate = DateTime.FromOADate(regDateDouble);
-        }
+
         var counterparty = BusinessLogic.GetConterparty(session, this.Parameters[shift + 2], exceptionList, logger);
         if (counterparty == null)
         {
@@ -81,18 +80,16 @@ namespace ImportData
         var filePath = this.Parameters[shift + 6];
 
         var dated = DateTime.MinValue;
-        var datedDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 7]) && !double.TryParse(this.Parameters[shift + 7].Trim(), style, culture, out datedDouble))
+        try
+        {
+          dated = ParseDate(this.Parameters[shift + 7], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать значение в поле \"Письмо от\" \"{0}\".", this.Parameters[shift + 7]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
-        }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 7].ToString()))
-            dated = DateTime.FromOADate(datedDouble);
         }
 
         var inNumber = this.Parameters[shift + 8];

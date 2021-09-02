@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace ImportData
 {
@@ -30,6 +31,33 @@ namespace ImportData
     public virtual IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, string ignoreDuplicates, int shift = 0)
     {
       return new List<Structures.ExceptionsStruct>();
+    }
+
+    /// <summary>
+    /// Преобразовать значение в дату.
+    /// </summary>
+    /// <param name="value">Значение.</param>
+    /// <param name="style">Стиль преобразования числовой строки.</param>
+    /// <param name="culture">Культура.</param>
+    /// <returns>Преобразованная дата.</returns>
+    /// <exception cref="FormatException" />
+    public DateTime ParseDate(string value, NumberStyles style, CultureInfo culture)
+    {
+      if (!string.IsNullOrEmpty(value))
+      {
+        DateTime date;
+        if (DateTime.TryParse(value.Trim(), culture.DateTimeFormat, DateTimeStyles.None, out date))
+          return date;
+
+        var dateDouble = 0.0;
+        if (double.TryParse(value.Trim(), style, culture, out dateDouble))
+          return DateTime.FromOADate(dateDouble);
+
+        throw new FormatException("Неверный формат строки.");
+      }
+      else
+        return DateTime.MinValue;
+      
     }
   }
 }

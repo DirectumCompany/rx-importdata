@@ -36,18 +36,16 @@ namespace ImportData
         DateTime? regDate = DateTime.MinValue;
         var style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
         var culture = CultureInfo.CreateSpecificCulture("en-GB");
-        var regDateDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 1]) && !double.TryParse(this.Parameters[shift + 1].Trim(), style, culture, out regDateDouble))
+        try
+        {
+          regDate = ParseDate(this.Parameters[shift + 1], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать дату регистрации \"{0}\".", this.Parameters[shift + 1]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
-        }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 1].ToString()))
-            regDate = DateTime.FromOADate(regDateDouble);
         }
 
         var counterparty = BusinessLogic.GetConterparty(session, this.Parameters[shift + 2], exceptionList, logger);
@@ -100,33 +98,29 @@ namespace ImportData
         var filePath = this.Parameters[shift + 8];
 
         DateTime? validFrom = DateTime.MinValue;
-        var validFromDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 9]) && !double.TryParse(this.Parameters[shift + 9].Trim(), style, culture, out validFromDouble))
+        try
+        {
+          validFrom = ParseDate(this.Parameters[shift + 9], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать значение в поле \"Действует с\" \"{0}\".", this.Parameters[shift + 9]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
         }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 9].ToString()))
-            validFrom = DateTime.FromOADate(validFromDouble);
-        }
 
         DateTime? validTill = DateTime.MinValue;
-        var validTillDouble = 0.0;
-        if (!string.IsNullOrWhiteSpace(this.Parameters[shift + 10]) && !double.TryParse(this.Parameters[shift + 10].Trim(), style, culture, out validTillDouble))
+        try
+        {
+          validTill = ParseDate(this.Parameters[shift + 10], style, culture);
+        }
+        catch (Exception)
         {
           var message = string.Format("Не удалось обработать значение в поле \"Действует по\" \"{0}\".", this.Parameters[shift + 10]);
           exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
           logger.Error(message);
           return exceptionList;
-        }
-        else
-        {
-          if (!string.IsNullOrEmpty(this.Parameters[shift + 10].ToString()))
-            validTill = DateTime.FromOADate(validTillDouble);
         }
 
         var totalAmount = 0.0;
