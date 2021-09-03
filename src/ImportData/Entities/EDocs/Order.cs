@@ -123,6 +123,15 @@ namespace ImportData
           if (order == null)
             order = session.Create<Sungero.RecordManagement.IOrder>();
 
+          if (order != null && order.RegistrationState == Sungero.Docflow.OfficialDocument.RegistrationState.Registered)
+          {
+            order.State.Properties.RegistrationNumber.IsRequired = false;
+            Sungero.Docflow.PublicFunctions.OfficialDocument.RegisterDocument(order, null, null, null, null, false);
+            order.RegistrationDate = DateTime.Today;
+            order.Save();
+            session.SubmitChanges();
+          }
+
           if (regDate != null)
             order.RegistrationDate = regDate;
           order.RegistrationNumber = regNumber;

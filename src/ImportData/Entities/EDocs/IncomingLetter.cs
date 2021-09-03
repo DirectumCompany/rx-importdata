@@ -121,6 +121,15 @@ namespace ImportData
           if (incomingLetter == null)
             incomingLetter = session.Create<Sungero.RecordManagement.IIncomingLetter>();
 
+          if (incomingLetter != null && incomingLetter.RegistrationState == Sungero.Docflow.OfficialDocument.RegistrationState.Registered)
+          {
+            incomingLetter.State.Properties.RegistrationNumber.IsRequired = false;
+            Sungero.Docflow.PublicFunctions.OfficialDocument.RegisterDocument(incomingLetter, null, null, null, null, false);
+            incomingLetter.RegistrationDate = DateTime.Today;
+            incomingLetter.Save();
+            session.SubmitChanges();
+          }
+
           if (regDate != DateTime.MinValue)
             incomingLetter.RegistrationDate = regDate;
           incomingLetter.RegistrationNumber = regNumber;

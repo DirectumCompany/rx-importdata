@@ -108,6 +108,15 @@ namespace ImportData
           if (addendum == null)
             addendum = session.Create<Sungero.Docflow.IAddendum>();
 
+          if (addendum != null && addendum.RegistrationState == Sungero.Docflow.OfficialDocument.RegistrationState.Registered)
+          {
+            addendum.State.Properties.RegistrationNumber.IsRequired = false;
+            Sungero.Docflow.PublicFunctions.OfficialDocument.RegisterDocument(addendum, null, null, null, null, false);
+            addendum.RegistrationDate = DateTime.Today;
+            addendum.Save();
+            session.SubmitChanges();
+          }
+
           session.Clear();
           session.Dispose();
         }

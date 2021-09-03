@@ -95,7 +95,7 @@ namespace ImportData
       else
       {
         var message = string.Format("Не удалось найти соответствующий реестр с ИД \"{0}\".", documentRegisterId);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
 
@@ -104,7 +104,7 @@ namespace ImportData
       else
       {
         var message = string.Format("Не была найдена соответствующая группа регистрации. Права на документ будут выданы для роли c Guid {0}.", defaultRegistrationRoleGuid.ToString());
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
         var regRole = BusinessLogic.GetRoleBySid(session, defaultRegistrationRoleGuid);
         edoc.AccessRights.Grant(regRole, DefaultAccessRightsTypes.FullAccess);
@@ -115,7 +115,7 @@ namespace ImportData
       }
       catch (Exception ex)
       {
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = ex.Message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = ex.Message });
       }
       return exceptionList;
     }
@@ -175,7 +175,7 @@ namespace ImportData
       if (documentKinds.Count > 1)
       {
         var message = string.Format("Найдено несколько типов документов с именем \"{0}\". Проверьте, что в выбрана верная запись.", documentKind.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return documentKind;
@@ -212,7 +212,7 @@ namespace ImportData
       if (conterparties.Count > 1)
       {
         var message = string.Format("Найдено несколько контрагентов с именем \"{0}\". Проверьте, что в выбрана верная запись.", conterpartyName);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return conterparty;
@@ -263,7 +263,7 @@ namespace ImportData
       if (contractCategories.Count > 1)
       {
         var message = string.Format("Найдено несколько категорий договоров с именем \"{0}\". Проверьте, что в выбрана верная запись.", contractCategory.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return contractCategory;
@@ -285,7 +285,7 @@ namespace ImportData
       if (businessUnits.Count > 1)
       {
         var message = string.Format("Найдено несколько наших организаций именем \"{0}\". Проверьте, что в выбрана верная запись.", businessUnit.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return businessUnit;
@@ -336,7 +336,7 @@ namespace ImportData
       if (departments.Count > 1)
       {
         var message = string.Format("Найдено несколько подразделений именем \"{0}\". Проверьте, что в выбрана верная запись.", department.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return department;
@@ -387,7 +387,7 @@ namespace ImportData
       if (currencies.Count > 1)
       {
         var message = string.Format("Найдено несколько валют именем \"{0}\". Проверьте, что в выбрана верная запись.", currency.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return currency;
@@ -409,7 +409,7 @@ namespace ImportData
       if (employees.Count > 1)
       {
         var message = string.Format("Найдено несколько сотрудников с именем \"{0}\". Проверьте, что в выбрана верная запись.", employee.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return employee;
@@ -445,7 +445,7 @@ namespace ImportData
       if (cities.Count > 1)
       {
         var message = string.Format("Найдено несколько городов с наименованием \"{0}\". Проверьте, что в выбрана верная запись.", city.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return city;
@@ -467,7 +467,7 @@ namespace ImportData
       if (regions.Count > 1)
       {
         var message = string.Format("Найдено несколько регионов с наименованием \"{0}\". Проверьте, что в выбрана верная запись.", region.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return region;
@@ -489,7 +489,7 @@ namespace ImportData
       if (banks.Count > 1)
       {
         var message = string.Format("Найдено несколько банков с наименованием \"{0}\". Проверьте, что в выбрана верная запись.", bank.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return bank;
@@ -507,12 +507,13 @@ namespace ImportData
     public static Sungero.Parties.IPerson GetPerson(Session session, string lastName, string firstName, string middleName, List<Structures.ExceptionsStruct> exceptionList, NLog.Logger logger)
     {
       // TODO Кэшировать.
-      var persons = Enumerable.ToList(session.GetAll<Sungero.Parties.IPerson>().Where(x => x.LastName == lastName && x.FirstName == firstName && x.MiddleName == middleName));
+      var persons = Enumerable.ToList(session.GetAll<Sungero.Parties.IPerson>().Where(x => x.LastName == lastName && x.FirstName == firstName && x.MiddleName == middleName && !string.IsNullOrWhiteSpace(middleName) ||
+          x.LastName == lastName && x.FirstName == firstName && string.IsNullOrWhiteSpace(middleName)));
       var person = (Enumerable.FirstOrDefault<Sungero.Parties.IPerson>(persons));
       if (persons.Count > 1)
       {
         var message = string.Format("Найдено несколько персон с ФИО \"{0} {1} {2}\". Проверьте, что в выбрана верная запись.", lastName, firstName, middleName);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return person;
@@ -534,7 +535,7 @@ namespace ImportData
       if (jobTitles.Count > 1)
       {
         var message = string.Format("Найдено несколько должностей с именем \"{0}\". Проверьте, что в выбрана верная запись.", jobTitle.Name);
-        exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+        exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
         logger.Warn(message);
       }
       return jobTitle;
@@ -563,7 +564,7 @@ namespace ImportData
         catch (Exception ex)
         {
           var message = string.Format("Не удалось создать должность \"{0}\". Текст ошибки: {1}.", jobTitle.Name, ex.Message);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Warn, Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Warn, Message = message });
           logger.Warn(message);
         }
       return jobTitle;

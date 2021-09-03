@@ -100,11 +100,12 @@ namespace ImportData
           var person = Sungero.Parties.People.Null;
           if (ignoreDuplicates.ToLower() != Constants.ignoreDuplicates.ToLower())
           {
-            var persons = Enumerable.ToList(session.GetAll<Sungero.Parties.IPerson>().Where(x => x.LastName == lastName && x.FirstName == firstName));
+            var persons = Enumerable.ToList(session.GetAll<Sungero.Parties.IPerson>().Where(x => x.LastName == lastName && x.FirstName == firstName && x.MiddleName == middleName && !string.IsNullOrWhiteSpace(middleName) ||
+              x.LastName == lastName && x.FirstName == firstName && string.IsNullOrWhiteSpace(middleName)));
             person = (Enumerable.FirstOrDefault<Sungero.Parties.IPerson>(persons));
             if (person != null)
             {
-              var message = string.Format("Персона не может быть импортирована. Найден дубль по реквизитам Фамилия: \"{0}\", Имя: {1}.", lastName, firstName);
+              var message = string.Format("Персона не может быть импортирована. Найден дубль по ФИО {0} {1} {2}.", lastName, firstName, middleName);
               exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = "Error", Message = message });
               logger.Error(message);
               return exceptionList;

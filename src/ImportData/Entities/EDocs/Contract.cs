@@ -172,6 +172,15 @@ namespace ImportData
           if (contract == null)
             contract = session.Create<Sungero.Contracts.IContract>();
 
+          if (contract != null && contract.RegistrationState == Sungero.Docflow.OfficialDocument.RegistrationState.Registered)
+          {
+            contract.State.Properties.RegistrationNumber.IsRequired = false;
+            Sungero.Docflow.PublicFunctions.OfficialDocument.RegisterDocument(contract, null, null, null, null, false);
+            contract.RegistrationDate = DateTime.Today;
+            contract.Save();
+            session.SubmitChanges();
+          }
+
           contract.Counterparty = counterparty;
           contract.DocumentKind = documentKind;
           contract.DocumentGroup = contractCategory;

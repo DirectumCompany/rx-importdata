@@ -192,6 +192,15 @@ namespace ImportData
           if (supAgreement == null)
             supAgreement = session.Create<Sungero.Contracts.ISupAgreement>();
 
+          if (supAgreement != null && supAgreement.RegistrationState == Sungero.Docflow.OfficialDocument.RegistrationState.Registered)
+          {
+            supAgreement.State.Properties.RegistrationNumber.IsRequired = false;
+            Sungero.Docflow.PublicFunctions.OfficialDocument.RegisterDocument(supAgreement, null, null, null, null, false);
+            supAgreement.RegistrationDate = DateTime.Today;
+            supAgreement.Save();
+            session.SubmitChanges();
+          }
+
           session.Clear();
           session.Dispose();
 
