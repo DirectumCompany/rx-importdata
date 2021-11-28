@@ -28,7 +28,7 @@ namespace ImportData
     /// <returns>Число запрашиваемых параметров.</returns>
     public override IEnumerable<Structures.ExceptionsStruct> SaveToRX(NLog.Logger logger, bool supplementEntity, string ignoreDuplicates, int shift = 0)
     {
-      
+
       var exceptionList = new List<Structures.ExceptionsStruct>();
 
       using (var session = new Session())
@@ -37,7 +37,7 @@ namespace ImportData
         if (string.IsNullOrEmpty(name))
         {
           var message = string.Format("Не заполнено поле \"Наименование\".");
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = "Error", Message = message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = "Error", Message = message });
           logger.Error(message);
           return exceptionList;
         }
@@ -90,6 +90,14 @@ namespace ImportData
         try
         {
           // Проверка ИНН.
+          if (!string.IsNullOrEmpty(tin) && tin.Length > 12)
+          {
+            var message = string.Format("Компания не может быть импортирована. Поле ИНН не может быть длиннее 12 символов. Наименование: \"{0}\", ИНН: {1}.", name, tin);
+            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+            logger.Error(message);
+            return exceptionList;
+          }
+
           var resultTIN = Sungero.Parties.PublicFunctions.Counterparty.CheckTin(tin, true);
           if (!string.IsNullOrEmpty(resultTIN))
           {
@@ -100,6 +108,14 @@ namespace ImportData
           }
 
           // Проверка КПП.
+          if (!nonresident && !string.IsNullOrEmpty(trrc) && trrc.Length > 9)
+          {
+            var message = string.Format("Компания не может быть импортирована. Поле КПП не может быть длиннее 9 символов. Наименование: \"{0}\", КПП: {1}.", name, trrc);
+            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+            logger.Error(message);
+            return exceptionList;
+          }
+
           var resultTRRC = BusinessLogic.CheckTrrcLength(trrc);
           if (!string.IsNullOrEmpty(resultTRRC))
           {
@@ -110,10 +126,27 @@ namespace ImportData
           }
 
           // Проверка ОГРН.
+          if (!string.IsNullOrEmpty(psrn) && psrn.Length > 15)
+          {
+            var message = string.Format("Компания не может быть импортирована. Поле ОГРН не может быть длиннее 15 символов. Наименование: \"{0}\", ОГРН: {1}.", name, psrn);
+            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+            logger.Error(message);
+            return exceptionList;
+          }
+
           var resultPSRN = BusinessLogic.CheckPsrnLength(psrn);
           if (!string.IsNullOrEmpty(resultPSRN))
           {
             var message = string.Format("Компания не может быть импортирована. Некорректный ОГРН. Наименование: \"{0}\", ОГРН: {1}. {2}", name, psrn, resultPSRN);
+            exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
+            logger.Error(message);
+            return exceptionList;
+          }
+
+          // Проверка ОКПО.
+          if (!string.IsNullOrEmpty(nceo) && nceo.Length > 10)
+          {
+            var message = string.Format("Компания не может быть импортирована. Поле ОКПО не может быть длиннее 10 символов. Наименование: \"{0}\", ОКПО: {1}.", name, nceo);
             exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = message });
             logger.Error(message);
             return exceptionList;
@@ -165,7 +198,7 @@ namespace ImportData
         catch (Exception ex)
         {
           Console.WriteLine(ex.Message);
-          exceptionList.Add(new Structures.ExceptionsStruct {ErrorType = Constants.ErrorTypes.Error, Message = ex.Message});
+          exceptionList.Add(new Structures.ExceptionsStruct { ErrorType = Constants.ErrorTypes.Error, Message = ex.Message });
           return exceptionList;
         }
         session.SubmitChanges();
