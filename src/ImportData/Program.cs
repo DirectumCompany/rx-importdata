@@ -26,7 +26,6 @@ namespace ImportData
     /// </summary>
     public static void UpdateModules()
     {
-      ClientDevelopmentUpdater.Instance.RefreshDevelopment();
       MetadataService.ConfigurationSettingsPaths = new Sungero.Domain.ClientConfigurationSettingsPaths(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
       ClientLazyAssembliesResolver.Instance.LinkToAssembliesFolder(ClientDevelopmentUpdater.Instance.CacheFolder);
 
